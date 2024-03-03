@@ -1,0 +1,108 @@
+<main class="bg-gray-50 dark:bg-gray-900 h-screen">
+  <ul class="nav nav-pills nav-justified">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/mapa">Mis visitas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="/historia" aria-current="page">Añadir al diario</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/diario" >Diario</a>
+    </li>
+
+  </ul>
+    <div id="map"></div>
+    <div>
+      <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+        <fieldset hidden>
+        <div class="mb-3">
+          <input type="text" class="form-control" id="latitudForm" formControlName="latitudForm">
+          <input type="text" class="form-control" id="longitudForm" formControlName="longitudForm">
+          <input type="text" class="form-control" id="imagenPath" formControlName="imagenPath">
+          <input type="text" class="form-control" id="idUsuario" formControlName="idUsuario">
+        </div>
+      </fieldset>
+      <div *ngIf="this.formulario.get('latitudForm')?.invalid && (this.formulario.get('latitudForm')?.dirty || this.formulario.get('latitudForm')?.touched)" class="alert alert-danger">
+        <div *ngIf="this.formulario.get('latitudForm')?.errors?.['required']" class="alert alert-danger">Establece un punto en el mapa</div>
+      </div>
+      <div class="container text-center">
+        <div class="row">
+          <div class="col">
+            <div *ngIf="procesandoFormulario" class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div *ngIf="mostrarMensajeSubmit && seHizoSubmit && hizoClickEnElMapa" class="text-bg-primary p-3">¡¡ Historia subida !!</div>
+            <div *ngIf="!mostrarMensajeSubmit && seHizoSubmit && hizoClickEnElMapa" class="text-bg-danger p-3">¡¡ Errores de validación !!, recuerde rellenar todos los campos marcados con *</div>
+            <div *ngIf="!hizoClickEnElMapa" class="text-bg-danger p-3">¡¡ Errores de validación !!, Recuerde pulsar sobre el mapa</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="fechaForm" class="form-label">Fecha *</label>
+              <input type="date" class="form-control" id="fechaForm" formControlName="fechaForm">
+              <div *ngIf="this.formulario.get('fechaForm')?.invalid && (this.formulario.get('fechaForm')?.dirty || this.formulario.get('fechaForm')?.touched)" class="alert alert-danger">
+                <div *ngIf="this.formulario.get('fechaForm')?.errors?.['required']" class="alert alert-danger">Establece una fecha</div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="mb-3">
+              <label for="tituloForm" class="form-label">Calificación del viaje *</label>
+              <div class="rating">             
+                <input type="radio" name="notaPlayaForm" style="--c:#ff9933" class="form-control" id="notaPlayaForm" formControlName="notaPlayaForm" value="5">
+                <input type="radio" name="notaPlayaForm" style="--c:#ff9933" class="form-control" id="notaPlayaForm" formControlName="notaPlayaForm" value="4">
+                <input type="radio" name="notaPlayaForm" style="--c:#ff9933" class="form-control" id="notaPlayaForm" formControlName="notaPlayaForm" value="3">
+                <input type="radio" name="notaPlayaForm" style="--c:#ff9933" class="form-control" id="notaPlayaForm" formControlName="notaPlayaForm" value="2">
+                <input type="radio" name="notaPlayaForm" style="--c:#ff9933" class="form-control" id="notaPlayaForm" formControlName="notaPlayaForm" value="1">
+              </div>
+              <div *ngIf="this.formulario.get('notaPlayaForm')?.invalid && (this.formulario.get('notaPlayaForm')?.dirty || this.formulario.get('notaPlayaForm')?.touched)" class="alert alert-danger">
+                <div *ngIf="this.formulario.get('notaPlayaForm')?.errors?.['required']" class="alert alert-danger">Establece una calificación de viaje</div>
+              </div>
+            </div>
+          </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <input type="text" class="form-control" id="tituloForm" rows="3" formControlName="tituloForm" placeholder="¿Cómo titularías tu historia?">
+              <div *ngIf="this.formulario.get('tituloForm')?.invalid && (this.formulario.get('tituloForm')?.dirty || this.formulario.get('tituloForm')?.touched)" class="alert alert-danger">
+                <div *ngIf="this.formulario.get('tituloForm')?.errors?.['required']" class="alert alert-danger">Dale un título de tu historia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <textarea class="form-control" id="historiaForm" rows="3" formControlName="historiaForm" placeholder="Cuentame aquí tu historia..." required></textarea>
+              <div *ngIf="this.formulario.get('historiaForm')?.invalid && (this.formulario.get('historiaForm')?.dirty || this.formulario.get('historiaForm')?.touched)" class="alert alert-danger">
+                <div *ngIf="this.formulario.get('historiaForm')?.errors?.['required']" class="alert alert-danger">Introduce una historia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label for="historiaForm" class="form-label">¡¡ Cual ha sido la foto mas reseñable !!</label>
+              <input type="file" class="form-control" id="inputGroupFile02" formControlName="imagen" (change)="uploadImage($event)">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary" [disabled]="procesandoFormulario">{{ procesandoFormulario ? "Subiendo historia..." : "Añadir viaje al diario"}} </button>
+            </div>
+            
+          </div>
+        </div>
+        </div>
+      </div>
+      </form>
+  </div>
+</main>

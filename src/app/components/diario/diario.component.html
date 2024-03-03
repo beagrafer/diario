@@ -1,0 +1,117 @@
+<main class="bg-gray-50 dark:bg-gray-900 h-screen">
+    
+    <ul class="nav nav-pills nav-justified">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/mapa">Mis visitas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/historia">Añadir al diario</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="/diario" aria-current="page">Diario</a>
+        </li>
+
+      </ul>
+
+
+
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="fechaInicioForm" class="form-label">Fecha inicio *</label>
+                        <input type="date" class="form-control" id="fechaInicioForm" formControlName="fechaInicioForm">
+                        <div *ngIf="this.formulario.get('fechaInicioForm')?.invalid && (this.formulario.get('fechaInicioForm')?.dirty || this.formulario.get('fechaInicioForm')?.touched)" class="alert alert-danger">
+                            <div *ngIf="this.formulario.get('fechaInicioForm')?.errors?.['required']" class="alert alert-danger">Establece una fecha de inicio válida</div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="fechaFinForm" class="form-label">Fecha fin *</label>
+                        <input type="date" class="form-control" id="fechaFinForm" formControlName="fechaFinForm">
+                        <div *ngIf="this.formulario.get('fechaFinForm')?.invalid && (this.formulario.get('fechaFinForm')?.dirty || this.formulario.get('fechaFinForm')?.touched)" class="alert alert-danger">
+                            <div *ngIf="this.formulario.get('fechaFinForm')?.errors?.['required']" class="alert alert-danger">Establece una fecha de fin válida</div>
+                        </div>
+                    </div> 
+                </div>            
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div *ngIf="hayErrores && seHizoSubmit" class="text-bg-danger p-3">¡¡ Errores de validación !! Establece un rango de fechas válido</div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col-md-auto">
+                    <button type="submit" class="btn btn-primary">Consulta diario</button>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <div class="container">
+        <div id="carouselExample" class="carousel slide">
+            <div class="carousel-inner">
+                <ul>
+                    <li *ngFor="let marcador of marcadores; let i = index">
+                        <div *ngIf="i==0">
+                            <div class="carousel-item active">                               
+                                <div>
+                                    <img src="{{marcador.imagenPath }}" class="img-fluid">
+                                </div>
+                                <div>
+                                    <p class="h4">
+                                        {{marcador.fechaForm}}
+                                    </p>
+                                </div>
+                                <div>
+                                    <figure class="text-end">
+                                        <blockquote class="blockquote">
+                                            {{marcador.tituloForm}}
+                                        </blockquote>
+                                    </figure>
+                                    <figcaption class="blockquote-footer">
+                                        {{marcador.historiaForm}}
+                                    </figcaption>                                    
+                                </div>
+                            </div>                            
+                        </div>
+                        <div *ngIf="i!=0">
+                            <div class="carousel-item">
+                                <div>
+                                    <img src="{{marcador.imagenPath }}" class="img-fluid">
+                                </div>
+                                <div>
+                                    <p class="h4">
+                                        {{marcador.fechaForm}}
+                                    </p>
+                                </div>
+                                <div>
+                                    <figure class="text-end">
+                                        <blockquote class="blockquote">
+                                            {{marcador.tituloForm}}
+                                        </blockquote>
+                                    </figure>
+                                    <figcaption class="blockquote-footer">
+                                        {{marcador.historiaForm}}
+                                    </figcaption>                                    
+                                </div>
+                            </div>                            
+                        </div>
+                </li>
+            </ul>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>     
+    </div>
+
+</main>
+
